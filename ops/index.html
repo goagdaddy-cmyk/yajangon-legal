@@ -133,7 +133,7 @@ window.YAJANGON_CONFIG = Object.freeze({
     let succeeded=false;
     try{
       const {data,error}=await state.client.rpc('yajangon_v102_submit_safety_notice',{
-        p_category:'other',p_details:'QA 테스트 전용: 발견 및 피드를 열지 않고 독립 안전 신고 접수·운영자 조회를 확인합니다. 실제 이용자 피해 신고가 아닙니다.',p_qa_test:true
+        p_category:'child_safety',p_details:'QA 테스트 전용: 발견 및 피드를 열지 않고 독립 안전 신고 접수·운영자 조회를 확인합니다. 실제 이용자 피해 신고가 아닙니다.',p_qa_test:true
       });
       if(error)throw error;if(!data?.ok)throw new Error('서버에서 접수를 확인하지 못했습니다.');
       succeeded=true;
