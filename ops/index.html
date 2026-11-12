@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0d1715">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>YAJANG ON — 운영 콘솔</title>
+<style>
+:root{--bg:#f4f6f4;--ink:#15231e;--muted:#73817a;--green:#23634b;--mint:#bbdcca;--dark:#10211a;--line:#e5eae6;--white:#fff;--warn:#9f432f;--shadow:0 5px 24px #17271b09;font-family:Inter,Pretendard,'Noto Sans KR',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font-size:14px}button,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-visible{outline:2px solid #70b895;outline-offset:2px}.hidden{display:none!important}.auth-page{min-height:100vh;display:grid;grid-template-columns:minmax(400px,48%) 1fr;background:#fdfefd}.auth-card{width:min(390px,calc(100% - 48px));margin:auto;padding:50px 0}.brand-mark{width:66px;height:66px;background:var(--dark);color:white;border-radius:19px;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:800;letter-spacing:-2px;margin-bottom:34px}.brand-mark span,.sidebar-logo span{color:#7fcea0;margin:0 3px}.eyebrow{font-size:10px;font-weight:850;letter-spacing:.2em;color:var(--green)}.auth-card h1{font-size:35px;letter-spacing:-.06em;margin:14px 0 14px}.auth-card>p{color:#76817b;line-height:1.9}.auth-rule{height:1px;background:var(--line);margin:31px 0}.btn{border:0;padding:13px 18px;border-radius:9px;display:flex;align-items:center;justify-content:center;gap:16px;font-weight:700}.btn-full{width:100%}.btn-white{background:white;border:1px solid #dce2dd;color:#243429;justify-content:space-between}.btn-white:hover{background:#f7faf8}.btn-primary{background:var(--green);color:white;margin-top:18px}.btn-primary:hover{background:#144e37}.auth-card label{display:block;color:#394c40;font-weight:700;margin:16px 0 7px;font-size:12px}.auth-card input{width:100%;padding:12px 14px;border-radius:8px;border:1px solid #dde6de;background:white;outline:0}.auth-card input:focus{border-color:#318765}.split{display:flex;align-items:center;gap:12px;margin:25px 0 6px;color:#929e97;font-size:11px;white-space:nowrap}.split:before,.split:after{content:'';height:1px;background:var(--line);flex:1}.auth-error{min-height:18px;margin:15px 0;color:#bc443b;font-size:12px;line-height:1.65}.auth-foot{font-size:12px!important;margin-top:24px}.auth-aside{background:#10251e;position:relative;overflow:hidden;color:#d5e9d8}.auth-aside:before{content:'';width:700px;height:700px;position:absolute;background:radial-gradient(circle,#34684b44 0%,transparent 66%);left:10%;top:-20%}.auth-aside:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0px,transparent 84px,#ffffff08 85px),repeating-linear-gradient(0deg,transparent 0px,transparent 84px,#ffffff08 85px)}.aside-content{position:absolute;z-index:2;left:11%;bottom:10%;right:5%}.vertical-label{font-size:10px;letter-spacing:.22em;font-weight:850;color:#9bc5ac}.glow-dot{width:15px;height:15px;background:#b6e0bc;border-radius:50%;box-shadow:0 0 36px 18px #b2dea83a;margin:30px 0}.aside-title{font-size:clamp(36px,5vw,73px);line-height:1.1;font-weight:600;letter-spacing:-.065em}.aside-content p{letter-spacing:.3em;font-weight:700;font-size:10px;margin-top:38px;color:#a1b5a8}.app-shell{display:flex;min-height:100vh}.sidebar{position:fixed;width:242px;left:0;top:0;bottom:0;background:#13261d;color:#f2f5f1;display:flex;flex-direction:column;z-index:20;overflow-y:auto}.brand-area{display:flex;align-items:center;padding:33px 26px 47px;gap:12px}.sidebar-logo{width:42px;height:42px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#234e3a;border-radius:11px;font-weight:800;letter-spacing:-1.8px}.brand-area strong{display:block;letter-spacing:.08em;font-weight:850;font-size:13px}.brand-area small{display:block;color:#95b3a0;font-size:9px;letter-spacing:.25em;margin-top:6px}.nav-caption{padding:0 27px;color:#789986;font-size:9px;letter-spacing:.2em;font-weight:800;margin-bottom:14px}.nav-btn{width:calc(100% - 22px);margin:3px 11px;background:transparent;border:0;text-align:left;color:#afc2b5;padding:14px 18px;display:flex;align-items:center;gap:13px;border-radius:8px;font-size:13px;font-weight:650}.nav-btn:hover{background:#203d2e;color:white}.nav-btn.active{color:#fff;background:#295841;box-shadow:inset 3px 0 #9bd9aa}.nav-icon{display:inline-flex;width:23px;color:#a9c8b3;font-size:20px;justify-content:center}.nav-count{margin-left:auto;font-size:10px;background:#345745;border-radius:12px;padding:3px 7px;color:#c6e1cd}.sidebar-footer{margin-top:auto;padding:18px 21px 28px}.db-status{padding:16px 13px;background:#1e382a;border-radius:11px;display:flex;align-items:center;gap:12px}.db-status i,.status-online i{width:7px;height:7px;border-radius:50%;background:#7ad19d;box-shadow:0 0 0 4px #7ad19d16;display:block}.db-status strong,.db-status small{display:block}.db-status strong{font-size:10px;letter-spacing:.06em}.db-status small{color:#92ae9c;font-size:10px;margin-top:6px}.logout{border:0;background:transparent;color:#abc3b1;width:100%;display:flex;justify-content:space-between;padding:20px 9px 0}.main{min-height:100vh;margin-left:242px;flex:1;display:flex;flex-direction:column;min-width:0}.topbar{height:81px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 44px;gap:14px}.breadcrumb{font-size:12px;letter-spacing:.02em;font-weight:700;color:#849088}.breadcrumb b{color:#2e4135}.breadcrumb span{color:#b6c1b7;margin:0 11px}.topbar-right{display:flex;align-items:center;gap:21px}.status-online{display:flex;align-items:center;gap:9px;color:#3d6f50;font-size:11px;font-weight:650;white-space:nowrap}.refresh-btn{background:#f2f6f3;border:0;border-radius:7px;color:#3c5c49;padding:9px 12px}.avatar{display:flex;align-items:center;justify-content:center;width:33px;height:33px;background:#e0ebe3;border-radius:50%;font-size:10px;font-weight:800;color:#3c7657}.menu-toggle{display:none;border:0;background:none;font-size:20px;color:#244b32}.content{width:100%;max-width:1570px;padding:45px 45px 65px;margin:0 auto;flex:1}.page-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:34px}.muted{color:#7f9188}.page-intro h1{font-weight:750;letter-spacing:-.065em;font-size:33px;margin:12px 0 9px}.heading-dot{color:#61a780}.page-intro p{margin:0;color:#75837c;font-size:13px}.update-info{text-align:right;white-space:nowrap}.update-info span,.update-info b{display:block}.update-info span{font-size:10px;color:#839188;margin-bottom:6px}.update-info b{font-size:12px;font-weight:650}.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:17px;margin-bottom:18px}.metric-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.metric{background:white;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:12px;padding:26px 24px;position:relative;min-height:177px;overflow:hidden}.metric>span{font-size:12px;color:#69786f;font-weight:650}.metric strong{font-size:39px;line-height:1.2;display:block;letter-spacing:-.06em;margin:16px 0 8px;font-weight:750}.metric small{color:#95a49a;font-size:11px}.metric-sign{position:absolute;right:20px;top:24px;color:#e2e9e3;font-weight:800;letter-spacing:.07em}.metric.urgent{background:#173f2d;border-color:#173f2d;color:#fff}.metric.urgent span{color:#b5d6c0}.metric.urgent small{color:#9cc6a8}.metric.urgent .metric-sign{color:#3e7454}.two-col{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);gap:18px;margin-top:18px}.panel{border:1px solid var(--line);background:white;border-radius:12px;box-shadow:var(--shadow);padding:25px 26px;min-width:0}.panel-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}.overline{color:#73947e;font-weight:850;letter-spacing:.13em;font-size:9px}.panel-top h2,.section-head h2{font-size:18px;letter-spacing:-.04em;margin:8px 0 0;font-weight:750}.period-chip{border:1px solid #e4ebe5;border-radius:8px;padding:8px 11px;color:#7a8f7f;font-size:10px;font-weight:650}.legend{display:flex;align-items:center;gap:7px;color:#73887a;font-size:11px;justify-content:flex-end;margin:10px 0 14px}.legend i,.gender-values i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:2px}.legend-green{background:#256e4a}.legend-light{background:#a7d6b7}.legend-muted{background:#e4e9e5}.chart{height:202px;border-bottom:1px solid #eff1ed;display:flex;align-items:flex-end;gap:8px;padding-bottom:29px;position:relative;margin-top:12px}.chart:before,.chart:after{content:'';position:absolute;left:0;right:0;border-top:1px dashed #e7eee8;z-index:0}.chart:before{top:33%}.chart:after{top:66%}.chart-col{position:relative;z-index:1;flex:1;min-width:5px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px}.chart-bars{height:100%;width:80%;max-width:21px;display:flex;flex-direction:column;justify-content:flex-end}.chart-bar{min-height:0}.chart-bar.green{background:#256e4a;border-radius:3px 3px 0 0}.chart-bar.light{background:#a7d6b7}.chart-bar.other{background:#e4e9e5}.chart-date{position:absolute;bottom:-25px;font-size:9px;color:#90a097;white-space:nowrap}.panel-foot{margin:19px 0 0;color:#98a59d;font-size:10px;line-height:1.7}.donut-area{display:flex;align-items:center;justify-content:center;gap:33px;min-height:217px}.donut{width:164px;height:164px;border-radius:50%;position:relative;background:conic-gradient(#d8e5dc 0 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0}.donut:after{content:'';background:#fff;position:absolute;inset:26px;border-radius:50%}.donut span{position:relative;z-index:1;display:flex;align-items:center;flex-direction:column}.donut strong{font-size:33px;font-weight:760}.donut small{font-size:9px;color:#96a39b;letter-spacing:.14em;margin-top:4px}.gender-values{flex:1;max-width:145px}.gender-values>div{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eff2ef;padding:12px 0;gap:20px}.gender-values>div span{white-space:nowrap;color:#79887e;font-size:11px}.gender-values strong{font-size:14px}.activity-rows>div{padding:14px 0;border-bottom:1px solid #f0f2ef;display:flex;justify-content:space-between}.activity-rows>div:last-child{border:0}.activity-rows span{color:#667a6d}.activity-rows b{color:#234a36}.link-action{background:none;border:0;color:#326349;font-weight:750;font-size:11px}.recent-list{display:grid;gap:6px}.recent-person{padding:10px 0;display:flex;align-items:center;gap:12px;border-bottom:1px solid #f0f2ef}.recent-person:last-child{border-bottom:0}.mini-avatar{background:#ebf3ed;color:#40744f;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;font-weight:750}.recent-person strong,.recent-person small{display:block}.recent-person strong{font-size:12px}.recent-person small{color:#9aa69d;font-size:10px;margin-top:4px}.recent-person time{margin-left:auto;color:#98a69b;font-size:10px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:550px}th{text-align:left;color:#89968d;font-weight:650;font-size:11px;background:#f8faf8;padding:15px 13px}td{padding:17px 13px;border-bottom:1px solid #eef1ed;font-size:12px}td:first-child{font-weight:650}.id-tag{display:block;font-size:10px;color:#9caaa0;margin-top:6px;font-weight:400}.chip{border-radius:7px;background:#eff4ef;padding:5px 9px;color:#3b6f50;font-size:10px;white-space:nowrap}.chip.suspended,.chip.banned{background:#fff2ed;color:#bb513a}.search-wrap{display:flex;align-items:center;background:#f5f7f4;border:1px solid #e6ebe6;border-radius:9px;padding:2px 6px}.search-wrap input{border:0;background:transparent;outline:0;padding:9px 10px;font-size:12px;width:190px}.clear-search{border:0;background:none;color:#9daa9e;font-size:19px}.flex-wrap{flex-wrap:wrap}.section-head{display:flex;justify-content:space-between;align-items:start;gap:20px;margin-bottom:19px}.section-head p{color:#7c8a7d;font-size:12px}.priority-label{border:1px solid #e6d6c7;background:#fff7ed;color:#915936;border-radius:7px;font-size:10px;font-weight:750;padding:9px 11px;white-space:nowrap}.report-list{display:grid;gap:13px}.report-card{background:white;border:1px solid #e1e9e2;border-radius:12px;padding:24px}.report-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:17px}.report-meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.pill{border-radius:6px;background:#eaf3ee;color:#2d704e;padding:6px 9px;font-size:10px;font-weight:700}.pill.orange{background:#fff0e8;color:#af5d32}.pill.gray{background:#eff3ef;color:#6a7e70}.report-card p{font-size:12px;line-height:1.8;color:#56675b;white-space:pre-wrap;overflow-wrap:anywhere}.report-id{font-size:11px;color:#96a197;letter-spacing:.02em}.report-actions{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}.action-btn{background:#f0f6f1;border:1px solid #ddeadd;border-radius:7px;padding:9px 13px;color:#235c3e;font-size:11px;font-weight:750}.action-btn:hover{background:#e4f1e6}.action-btn.danger{background:#fff2ed;color:#a74835;border-color:#f4d7c8}.action-btn.danger:hover{background:#ffe9df}.note-box{padding:22px 25px;margin-top:17px;background:#ebf0ec;border-left:3px solid #6b987b;border-radius:7px;color:#64796a;font-size:12px;line-height:1.9}.note-box b{color:#315a40}.note-box p{margin:5px 0 0}.request-row{display:grid;grid-template-columns:1fr 170px 100px;gap:20px;align-items:center;padding:16px 0;border-top:1px solid #edf1ed}.request-row strong,.request-row small{display:block}.request-row strong{font-size:12px}.request-row small{color:#88988b;font-size:10px;margin-top:7px}.empty{padding:54px 20px;text-align:center;color:#90a096;font-size:12px;line-height:1.8}.empty-icon{width:47px;height:47px;border:1px solid #e0e8e0;background:#f5f9f5;border-radius:14px;margin:0 auto 15px;display:flex;align-items:center;justify-content:center;font-size:21px;color:#90b29c}.ready-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.ready-item{display:flex;justify-content:space-between;align-items:center;gap:20px;background:#fff;border:1px solid #e4e9e4;padding:22px;border-radius:10px}.ready-item strong{display:block;font-size:13px}.ready-item small{display:block;color:#90a094;margin-top:7px;font-size:10px}.ready-status{font-size:11px;padding:6px 11px;border-radius:6px;white-space:nowrap}.ready-status.yes{background:#e5f3e9;color:#237442}.ready-status.no{background:#fff0eb;color:#bc5b3c}.site-footer{padding:20px 45px 24px;display:flex;justify-content:space-between;gap:20px;font-size:10px;color:#8e9c92;border-top:1px solid #e3eae4}.content .page.hidden{display:none}#toasts{position:fixed;z-index:90;bottom:24px;right:24px;pointer-events:none}.toast{background:#173d2a;color:white;padding:13px 19px;border-radius:8px;box-shadow:0 10px 30px #12281822;margin:7px 0;font-size:12px;max-width:350px}.toast.error{background:#963a32}.loading{opacity:.55;pointer-events:none}@media(max-width:1150px){.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.two-col{grid-template-columns:1fr}.content{padding:36px 29px 58px}.topbar{padding:0 29px}}@media(max-width:730px){.auth-page{grid-template-columns:1fr}.auth-aside{display:none}.auth-card{padding:32px 0}.sidebar{transform:translateX(-105%);transition:transform .2s ease}.sidebar.open{transform:translateX(0);box-shadow:0 0 0 100vmax #15241d60}.main{margin-left:0}.menu-toggle{display:block}.topbar{height:69px;padding:0 18px}.content{padding:32px 18px 50px}.topbar-right{gap:8px}.topbar-right .status-online,.refresh-btn span{display:none}.page-intro{align-items:flex-start}.page-intro h1{font-size:28px}.update-info{font-size:10px}.metric-grid{gap:10px}.metric{padding:20px;min-height:153px}.metric strong{font-size:33px}.panel{padding:20px 17px}.donut-area{gap:15px}.donut{height:125px;width:125px}.donut:after{inset:21px}.donut strong{font-size:26px}.gender-values{max-width:140px}.ready-grid{grid-template-columns:1fr}.site-footer{padding:20px;flex-direction:column}.section-head{flex-wrap:wrap}}@media(max-width:390px){.metric-grid{grid-template-columns:1fr}.donut-area{justify-content:space-around}.search-wrap input{width:130px}}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js" defer></script>
+<script defer>
+// Supabase publishable key is intentionally public. No service_role or secret credentials appear here.
+window.YAJANGON_CONFIG = Object.freeze({
+  SUPABASE_URL: 'https://qozckwehdtvzzljavqvr.supabase.co',
+  SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_T8ZwS3Oup3FQPB_SrNmKlw_hqUbYd6f'
+});
+
+</script>
+<script defer>
+/* YAJANG ON Operations V1: read-only member analytics + existing audited moderation API. */
+'use strict';
+(() => {
+  const CFG = window.YAJANGON_CONFIG;
+  const $ = id => document.getElementById(id);
+  const fmt = n => Number(n || 0).toLocaleString('ko-KR');
+  const state = {client:null,overview:null,reports:[],deletions:[],page:'dashboard',busy:false};
+  const nav = {dashboard:['운영 대시보드','서비스 전체 현황을 한눈에 확인하세요.'],members:['회원 현황','야장온 등록 회원의 가입 추이와 최근 프로필을 확인하세요.'],moderation:['신고 · 안전','접수된 신고를 확인하고 필요한 조치를 기록하세요.'],deletions:['계정 삭제 요청','요청된 계정 삭제 현황을 확인하세요.'],media:['미디어 안전 정리','삭제 대상 및 신고 증거의 보존 현황입니다.'],readiness:['출시 점검','프로덕션 승인 준비 상태를 확인하세요.']};
+  const readyLabels = {
+    operator_identity_confirmed:'운영자 소유권 확인',play_restrict_minors_confirmed:'Google Play 미성년자 접근 제한',
+    child_safety_contact_confirmed:'아동 안전 연락처 확인',moderation_response_ready:'신고 대응 운영 체계',
+    age_provider_integrated:'성인 인증 수단 연동',public_match_backend_secured:'공개 매칭 서버 보안',
+    discovery_backend_secured:'프로필 추천 서버 보안',owner_go_live_approved:'소유자 최종 출시 승인'
+  };
+  function node(tag, attrs={}, children=[]) {
+    const e=document.createElement(tag);
+    for(const [k,v] of Object.entries(attrs)) {
+      if(k==='class')e.className=v;
+      else if(k==='text')e.textContent=String(v??'');
+      else if(k==='title')e.title=String(v);
+      else if(k==='type')e.type=v;
+      else if(k==='dataset')Object.entries(v).forEach(([name,value])=>e.dataset[name]=String(value));
+      else e.setAttribute(k,String(v));
+    }
+    for(const child of children) e.append(child);
+    return e;
+  }
+  function set(id, val){if($(id))$(id).textContent=String(val??'—');}
+  function dateFmt(v, withTime=false){if(!v)return '—'; const d=new Date(v); if(Number.isNaN(d.getTime()))return String(v).slice(0,10);return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',...(withTime?{hour:'2-digit',minute:'2-digit'}:{})}).format(d);}
+  function timeFmt(v){if(!v)return '—'; const d=new Date(v);return Number.isNaN(d.getTime())?'—':new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',hour:'2-digit',minute:'2-digit'}).format(d);}
+  function notice(message,error=false){const e=node('div',{class:'toast'+(error?' error':''),text:message});$('toasts').append(e);setTimeout(()=>e.remove(),5200);}
+  function authError(msg){set('authError',msg||'');}
+  function setBusy(val){state.busy=val; $('refresh').disabled=val; $('appShell').classList.toggle('loading',val);}
+  function showLogin(){ $('loginScreen').classList.remove('hidden'); $('appShell').classList.add('hidden'); }
+  function showApp(){ $('loginScreen').classList.add('hidden'); $('appShell').classList.remove('hidden'); }
+  function selectPage(page){if(!nav[page])return;state.page=page;document.querySelectorAll('.page').forEach(e=>e.classList.toggle('hidden',e.id!=='page-'+page));document.querySelectorAll('.nav-btn').forEach(e=>e.classList.toggle('active',e.dataset.page===page));set('pageTitle',nav[page][0]);set('pageDesc',nav[page][1]);set('breadcrumbTitle',nav[page][0]);$('sidebar').classList.remove('open');if(page==='members')renderMembers();}
+  function empty(container,message,icon='✓'){container.replaceChildren(node('div',{class:'empty'},[node('div',{class:'empty-icon',text:icon}),node('div',{text:message})]));}
+  function renderOverview(){const d=state.overview||{}, t=d.totals||{},r=d.reports||{},x=d.deletions||{},m=d.media||{};
+    set('metricMembers',fmt(t.members));set('metricToday',fmt(t.today));set('metricWeek',fmt(t.past_7_days));set('metricReports',fmt(r.pending));
+    set('prioritySummary',(r.child_safety_pending||0)+'건의 아동 안전 신고');set('navReportCount',fmt(r.pending));set('summaryPending',fmt(r.pending)+'건');
+    set('summaryChild',fmt(r.child_safety_pending)+'건');set('summaryDeletions',fmt(x.pending)+'건');set('summaryMedia',fmt(m.photo_cleanup_pending)+'건');
+    set('genderTotal',fmt(t.members));set('genderMale',fmt(t.male));set('genderFemale',fmt(t.female));set('genderOther',fmt(t.unspecified));
+    set('mediaPending',fmt(m.photo_cleanup_pending));set('mediaEvidencePhoto',fmt(m.evidence_photo));set('mediaEvidenceOther',fmt(m.evidence_media));
+    const total=Math.max(0,Number(t.members||0)), male=Number(t.male||0), female=Number(t.female||0);
+    const malePct=total?male/total*100:0, femalePct=total?female/total*100:0;
+    $('genderDonut').style.background=total?`conic-gradient(#256e4a 0 ${malePct}%, #a7d6b7 ${malePct}% ${malePct+femalePct}%, #e4e9e5 ${malePct+femalePct}% 100%)`:'conic-gradient(#e4e9e5 0 100%)';
+    renderChart(d.daily||[]); renderRecent(d.recent_members||[]); renderMembers(); renderReadiness(d.readiness||{});
+  }
+  function renderChart(days){const root=$('dailyChart');root.replaceChildren();if(!days.length){empty(root,'가입 추이 정보가 없습니다.','·');return;}
+    const peak=Math.max(1,...days.map(x=>Number(x.total||0)));
+    days.forEach((x,i)=>{const total=Number(x.total||0), male=Number(x.male||0), female=Number(x.female||0), other=Math.max(0,total-male-female);
+      const col=node('div',{class:'chart-col',title:`${String(x.date).slice(0,10)} · ${total}명`}); const bar=node('div',{class:'chart-bars'});
+      const px=total?Math.max(4,total/peak*157):0;
+      for(const [val,k] of [[male,'green'],[female,'light'],[other,'other']])if(val){bar.append(node('div',{class:'chart-bar '+k,title:k+' '+val+'명',style:`height:${Math.max(1,val/total*px)}px`}));}
+      if(!total)bar.append(node('div',{class:'chart-bar other',style:'height:2px;opacity:.8'}));
+      col.append(bar,node('div',{class:'chart-date',text:(i%2===0||days.length<9)?String(x.date).slice(5,10).replace('-','.'):'·'}));root.append(col);
+    });
+  }
+  function recentRow(user){const gender=genderKo(user.gender);const div=node('div',{class:'recent-person'});
+    div.append(node('div',{class:'mini-avatar',text:(user.display_name||'?').slice(0,1)}));
+    div.append(node('div',{},[node('strong',{text:user.display_name||'이름 없음'}),node('small',{text:gender+' · '+(user.age??'—')+'세 · '+String(user.user_id||'').slice(0,8)})]));
+    div.append(node('time',{text:dateFmt(user.joined_at)}));return div;
+  }
+  function renderRecent(arr){const el=$('recentMembers');el.replaceChildren();if(!arr.length)return empty(el,'등록 회원이 없습니다.','◯');arr.slice(0,5).forEach(u=>el.append(recentRow(u)));}
+  function genderKo(v){const x=String(v||'').toLowerCase();return ['male','m','남','남성'].includes(x)?'남성':['female','f','여','여성'].includes(x)?'여성':'미표기';}
+  function renderMembers(){const all=state.overview?.recent_members||[];const term=String($('memberSearch').value||'').trim().toLowerCase();const arr=all.filter(u=>[u.display_name,u.user_id,genderKo(u.gender)].some(x=>String(x||'').toLowerCase().includes(term)));
+    const root=$('membersBody');root.replaceChildren();if(!arr.length){const tr=node('tr');tr.append(node('td',{colspan:'5',text:'검색 결과가 없습니다.',style:'text-align:center;padding:35px;color:#99a59b'}));root.append(tr);return;}
+    arr.forEach(u=>{const tr=node('tr');tr.append(node('td',{},[node('span',{text:u.display_name||'이름 없음'}),node('span',{class:'id-tag',text:String(u.user_id||'').slice(0,8)+'…'})]));tr.append(node('td',{text:genderKo(u.gender)}));tr.append(node('td',{text:u.age==null?'—':u.age+'세'}));tr.append(node('td',{text:dateFmt(u.joined_at)}));tr.append(node('td',{},[node('span',{class:'chip '+String(u.account_state||''),text:({active:'정상',suspended:'정지',banned:'차단',deleted:'삭제됨'})[u.account_state]||u.account_state||'정상'})]));root.append(tr);});
+  }
+  function renderReports(){const root=$('reportList');root.replaceChildren();const reports=Array.isArray(state.reports)?state.reports:[];
+    if(!reports.length)return empty(root,'미처리 신고가 없습니다.\n신고가 접수되면 이곳에 표시됩니다.','✓');
+    reports.forEach(r=>{const card=node('article',{class:'report-card'});
+      const head=node('div',{class:'report-head'});const tags=node('div',{class:'report-meta'});
+      tags.append(node('span',{class:'pill'+(r.reason==='child_safety'?' orange':''),text:r.reason==='child_safety'?'아동 안전':reasonKo(r.reason)}));tags.append(node('span',{class:'pill gray',text:r.source==='feed'?'피드 신고':'대화·미디어 신고'}));
+      head.append(tags,node('span',{class:'report-id',text:dateFmt(r.created_at,true)}));card.append(head);
+      card.append(node('div',{class:'report-id',text:'신고 ID: '+r.id}));
+      card.append(node('p',{text:r.details||'상세 내용 없음'}));
+      card.append(node('div',{class:'report-id',text:'대상 회원: '+String(r.target_id||'—')+(r.has_photo?' · 사진 증거 있음':'')+(r.has_media?' · 미디어 증거 있음':'')}));
+      const actions=node('div',{class:'report-actions'});
+      for(const [action,label,critical] of [['reviewing','검토 시작',false],['resolved','처리 완료',false],['dismissed','기각',false],['suspend','계정 정지',true],['ban','영구 차단',true]]){
+        const btn=node('button',{class:'action-btn'+(critical?' danger':''),type:'button',text:label});btn.addEventListener('click',()=>moderate(r,action,label));actions.append(btn);
+      }card.append(actions);root.append(card);
+    });
+  }
+  function reasonKo(r){return({harassment:'괴롭힘',spam:'스팸',fraud:'사기',sexual_content:'성적 콘텐츠',child_safety:'아동 안전',other:'기타'})[r]||r||'신고';}
+  async function moderate(report,action,label){if(state.busy)return;
+    const highRisk=['suspend','ban'].includes(action);if(!confirm(`${label} 조치를 실제 서버에 적용할까요?\n신고 대상: ${String(report.target_id||'').slice(0,10)}…\n모든 조치는 감사 기록에 남습니다.`))return;
+    const note=prompt('감사 기록에 남길 처리 사유를 입력하세요 (최대 500자).');if(note===null)return;
+    if(highRisk&&!note.trim()){notice('계정 제재에는 사유를 입력해야 합니다.',true);return;}
+    setBusy(true);
+    try{
+      const {data,error}=await state.client.rpc('yajangon_v101_moderation',{p_action:action,p_report_source:report.source,p_report_id:report.id,p_note:note.trim().slice(0,500)});
+      if(error)throw error;if(!data?.ok)throw new Error('처리 결과를 확인할 수 없습니다.');notice(label+' 조치가 서버에 기록되었습니다.');await loadData(true);
+    }catch(e){notice('처리 실패: '+(e?.message||e),true);}finally{setBusy(false);}
+  }
+  function renderDeletions(){const root=$('deletionList');root.replaceChildren();const d=Array.isArray(state.deletions)?state.deletions:[];if(!d.length){empty(root,'처리 대기 중인 계정 삭제 요청이 없습니다.','✓');return;}
+    d.forEach(x=>{const row=node('div',{class:'request-row'});row.append(node('div',{},[node('strong',{text:'회원 '+String(x.user_id||'').slice(0,8)+'…'}),node('small',{text:'요청: '+dateFmt(x.requested_at||x.at,true)})]));row.append(node('span',{class:'chip',text:x.status||'확인 필요'}));row.append(node('small',{text:'조회 전용'}));root.append(row);});
+  }
+  function renderReadiness(data){const root=$('readinessList');root.replaceChildren();for(const [key,label] of Object.entries(readyLabels)){
+    const val=data[key]===true;const tile=node('div',{class:'ready-item'});tile.append(node('div',{},[node('strong',{text:label}),node('small',{text:key})]));tile.append(node('span',{class:'ready-status '+(val?'yes':'no'),text:val?'확인 완료':'점검 필요'}));root.append(tile);
+  }}
+  async function loadData(silent=false){if(state.busy&&!silent)return;setBusy(true);
+    try{
+      const {data,error}=await state.client.rpc('yajangon_admin_overview_v1');
+      if(error)throw error;
+      state.overview=data||{};renderOverview();
+      const [mod,del]=await Promise.allSettled([
+        state.client.rpc('yajangon_v101_moderation',{p_action:'list',p_report_source:null,p_report_id:null,p_note:null}),
+        state.client.rpc('yajangon_v045_admin_queue',{p_action:'list_deletion',p_user_id:null})
+      ]);
+      if(mod.status==='fulfilled'&&!mod.value.error)state.reports=mod.value.data?.reports||[];
+      else {state.reports=[];notice('신고 목록 조회가 실패했습니다. 관리자 권한과 서버 API를 확인하세요.',true);}
+      if(del.status==='fulfilled'&&!del.value.error)state.deletions=del.value.data?.requests||[];
+      else {state.deletions=[];notice('삭제 요청 목록을 조회하지 못했습니다.',true);}
+      renderReports();renderDeletions();
+      set('lastUpdated',timeFmt(data.as_of||new Date().toISOString()));
+      if(!silent)notice('운영 서버의 최신 데이터를 불러왔습니다.');
+      return true;
+    }catch(e){
+      const msg=String(e?.message||e||'');if(/MODERATOR_REQUIRED|permission|JWT|401|403|authenticated/i.test(msg)){
+        await state.client.auth.signOut();showLogin();authError('운영자 권한이 확인되지 않았습니다. 승인된 계정으로 로그인하세요.');
+      }else notice('서버 연결 실패: '+msg,true);
+      return false;
+    }finally{setBusy(false);}
+  }
+  function wire(){
+    $('googleLogin').addEventListener('click',async()=>{
+      try{authError('');const {error}=await state.client.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});if(error)throw error;}
+      catch(e){authError('Google 로그인 실패: '+String(e.message||e));}
+    });
+    $('emailForm').addEventListener('submit',async e=>{e.preventDefault();authError('');const btn=e.target.querySelector('button[type=submit]');btn.disabled=true;
+      try{const {error}=await state.client.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)throw error;$('password').value='';await authenticated();}
+      catch(err){authError('로그인 실패: '+String(err.message||err));}finally{btn.disabled=false;}
+    });
+    $('logout').addEventListener('click',async()=>{await state.client.auth.signOut();state.overview=null;state.reports=[];state.deletions=[];showLogin();authError('');});
+    $('refresh').addEventListener('click',()=>loadData());$('menuToggle').addEventListener('click',()=>$('sidebar').classList.toggle('open'));
+    $('mainNav').addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)selectPage(b.dataset.page);});
+    document.querySelectorAll('[data-jump]').forEach(e=>e.addEventListener('click',()=>selectPage(e.dataset.jump)));
+    $('memberSearch').addEventListener('input',renderMembers);$('memberSearchClear').addEventListener('click',()=>{$('memberSearch').value='';renderMembers();});
+  }
+  async function authenticated(){const {data:{session}}=await state.client.auth.getSession();if(!session){showLogin();return;}const ok=await loadData(true);if(ok){showApp();selectPage(state.page);}}
+  async function init(){
+    if(!CFG||!window.supabase?.createClient){authError('인증 모듈을 불러오지 못했습니다. 네트워크 연결을 확인하세요.');return;}
+    state.client=window.supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    wire();const {data:{session},error}=await state.client.auth.getSession();if(error)authError(error.message);if(session)await authenticated();else showLogin();
+    state.client.auth.onAuthStateChange((event,sess)=>{if(event==='SIGNED_OUT')showLogin();else if(event==='SIGNED_IN'&&sess)setTimeout(()=>authenticated(),0);});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+
+</script>
+</head>
+<body>
+<div id="toasts" aria-live="polite"></div>
+<section class="auth-page" id="loginScreen">
+  <div class="auth-card">
+    <div class="brand-mark" aria-hidden="true">Y<span>·</span>O</div>
+    <div class="eyebrow">DESIRE LAB / OPERATIONS</div>
+    <h1>야장온 운영 콘솔</h1>
+    <p>가입 현황과 안전 신고를 관리하는<br>승인된 운영자 전용 공간입니다.</p>
+    <div class="auth-rule"></div>
+    <button id="googleLogin" class="btn btn-white btn-full">Google 계정으로 로그인 <span>↗</span></button>
+    <div class="split"><span>또는 기존 이메일 계정</span></div>
+    <form id="emailForm">
+      <label for="email">이메일</label><input type="email" id="email" name="email" autocomplete="username" required placeholder="operator@example.com">
+      <label for="password">비밀번호</label><input type="password" id="password" name="password" autocomplete="current-password" required placeholder="비밀번호 입력">
+      <button type="submit" class="btn btn-primary btn-full">로그인</button>
+    </form>
+    <div id="authError" class="auth-error" role="alert"></div>
+    <p class="auth-foot">운영자 권한은 서버에서 확인합니다.<br>일반 계정의 관리자 접근은 차단됩니다.</p>
+  </div>
+  <div class="auth-aside"><div class="aside-content"><span class="vertical-label">CONTROL / SAFETY / OPERATIONS</span><div class="glow-dot"></div><div class="aside-title">A safer space<br>starts behind<br>the scenes.</div><p>YAJANG ON · ADMIN V1</p></div></div>
+</section>
+<div class="app-shell hidden" id="appShell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand-area"><div class="sidebar-logo">Y<span>·</span>O</div><div><strong>YAJANG ON</strong><small>OPERATIONS</small></div></div>
+    <div class="nav-caption">WORKSPACE</div>
+    <nav id="mainNav" aria-label="관리 메뉴">
+      <button class="nav-btn active" data-page="dashboard"><span class="nav-icon">◫</span> 대시보드</button>
+      <button class="nav-btn" data-page="members"><span class="nav-icon">♙</span> 회원 현황</button>
+      <button class="nav-btn" data-page="moderation"><span class="nav-icon">⚑</span> 신고 · 안전 <span class="nav-count" id="navReportCount">0</span></button>
+      <button class="nav-btn" data-page="deletions"><span class="nav-icon">▤</span> 삭제 요청</button>
+      <button class="nav-btn" data-page="media"><span class="nav-icon">▥</span> 미디어 정리</button>
+      <button class="nav-btn" data-page="readiness"><span class="nav-icon">◇</span> 출시 점검</button>
+    </nav>
+    <div class="sidebar-footer"><div class="db-status"><i></i><div><strong>JAEDONG DATING</strong><small>Supabase · Korea</small></div></div><button id="logout" class="logout">로그아웃 <span>↗</span></button></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><button id="menuToggle" class="menu-toggle" aria-label="메뉴 열기">☰</button><div class="breadcrumb">DESIRE LAB <span>/</span> <b id="breadcrumbTitle">대시보드</b></div><div class="topbar-right"><span class="status-online"><i></i> 운영 서버 연결</span><button class="refresh-btn" id="refresh" title="새로고침">⟳ <span>새로고침</span></button><span class="avatar" title="승인된 관리자">OP</span></div></header>
+    <div class="content">
+      <div class="page-intro"><div><div class="eyebrow muted">YAJANG ON / LIVE OPERATIONS</div><h1 id="pageTitle">운영 대시보드<span class="heading-dot">.</span></h1><p id="pageDesc">서비스 전체 현황을 한눈에 확인하세요.</p></div><div class="update-info"><span>마지막 동기화</span><b id="lastUpdated">—</b></div></div>
+      <div id="page-dashboard" class="page">
+        <div class="metric-grid">
+          <div class="metric"><span>전체 등록 프로필</span><strong id="metricMembers">—</strong><small>야장온 프로필 기준</small><div class="metric-sign">01</div></div>
+          <div class="metric"><span>오늘 가입</span><strong id="metricToday">—</strong><small>한국 시간 기준</small><div class="metric-sign">02</div></div>
+          <div class="metric"><span>최근 7일 가입</span><strong id="metricWeek">—</strong><small>프로필 등록 사용자</small><div class="metric-sign">03</div></div>
+          <div class="metric urgent"><span>미처리 신고</span><strong id="metricReports">—</strong><small id="prioritySummary">아동 안전 우선 처리</small><div class="metric-sign">04</div></div>
+        </div>
+        <div class="two-col charts-grid"><section class="panel chart-panel"><div class="panel-top"><div><div class="overline">USER ACQUISITION</div><h2>일별 신규 가입</h2></div><span class="period-chip">최근 14일</span></div><div class="legend"><i class="legend-green"></i> 남성 <i class="legend-light"></i> 여성 <i class="legend-muted"></i> 기타</div><div id="dailyChart" class="chart" aria-label="일별 가입자 막대그래프"></div><p class="panel-foot">인증 사용자 전체가 아닌 야장온 프로필 보유자의 가입일을 기준으로 집계합니다.</p></section>
+        <section class="panel gender-panel"><div class="panel-top"><div><div class="overline">COMMUNITY</div><h2>성별 구성</h2></div><span class="period-chip">전체</span></div><div class="donut-area"><div class="donut" id="genderDonut"><span><strong id="genderTotal">—</strong><small>MEMBERS</small></span></div><div class="gender-values"><div><span><i class="legend-green"></i> 남성</span><strong id="genderMale">—</strong></div><div><span><i class="legend-light"></i> 여성</span><strong id="genderFemale">—</strong></div><div><span><i class="legend-muted"></i> 미표기</span><strong id="genderOther">—</strong></div></div></div><p class="panel-foot">회원이 선택한 프로필 성별 기준이며, 인증 계정의 성별을 추정하지 않습니다.</p></section></div>
+        <div class="two-col activity-grid"><section class="panel"><div class="panel-top"><div><div class="overline">TRUST & SAFETY</div><h2>안전 관리 현황</h2></div><button class="link-action" data-jump="moderation">신고 관리 ↗</button></div><div class="activity-rows"><div><span>미처리 신고</span><b id="summaryPending">—</b></div><div><span>아동 안전 관련 신고</span><b id="summaryChild">—</b></div><div><span>계정 삭제 요청</span><b id="summaryDeletions">—</b></div><div><span>정리 대기 사진</span><b id="summaryMedia">—</b></div></div></section><section class="panel"><div class="panel-top"><div><div class="overline">MEMBER DIRECTORY</div><h2>최근 가입 회원</h2></div><button class="link-action" data-jump="members">전체 보기 ↗</button></div><div id="recentMembers" class="recent-list"></div></section></div>
+      </div>
+      <div id="page-members" class="page hidden"><section class="panel"><div class="panel-top flex-wrap"><div><div class="overline">REGISTRATION</div><h2>등록 회원 목록</h2></div><div class="search-wrap"><input id="memberSearch" type="search" placeholder="닉네임·ID 검색" aria-label="회원 검색"><button id="memberSearchClear" class="clear-search">×</button></div></div><div class="table-wrap"><table><thead><tr><th>회원</th><th>성별</th><th>나이</th><th>가입일 (KST)</th><th>계정 상태</th></tr></thead><tbody id="membersBody"></tbody></table></div><p class="panel-foot">최근 40명만 조회합니다. 계정 정지·차단은 신고 기록을 근거로 한 운영자 기능을 사용합니다.</p></section></div>
+      <div id="page-moderation" class="page hidden"><section class="section-head"><div><div class="overline">TRUST & SAFETY</div><h2>통합 신고 접수함</h2><p>채팅·사진·영상·피드 신고를 통합해 확인합니다. 아동 안전 신고가 우선 정렬됩니다.</p></div><span class="priority-label">CSAE PRIORITY</span></section><div id="reportList" class="report-list"></div><div class="note-box">제재 버튼을 선택하면 실제 운영 서버에 반영되고 감사 기록이 남습니다. 관리자 본인과 다른 운영자를 제재할 수 없도록 서버가 제한합니다.</div></div>
+      <div id="page-deletions" class="page hidden"><section class="panel"><div class="panel-top"><div><div class="overline">PRIVACY REQUESTS</div><h2>계정 삭제 요청</h2></div><span class="period-chip">운영자 전용</span></div><div id="deletionList"></div><p class="panel-foot">현재 웹 버전은 조회 전용입니다. 개인정보·인증 계정의 영구 삭제는 별도 본인 확인과 보존 의무 검토 후 운영 절차로 진행합니다.</p></section></div>
+      <div id="page-media" class="page hidden"><div class="metric-grid three"><div class="metric"><span>정리 대기 사진</span><strong id="mediaPending">—</strong><small>삭제가 완료되지 않은 항목</small></div><div class="metric"><span>신고 증거 사진</span><strong id="mediaEvidencePhoto">—</strong><small>증거 보존 대상</small></div><div class="metric"><span>신고 증거 미디어</span><strong id="mediaEvidenceOther">—</strong><small>영상·음성 등</small></div></div><div class="note-box"><b>안전 조치</b><p>신고 증거 보존과 회원 개인정보 보호가 충돌하지 않도록 자동·수동 삭제를 이 화면에서 실행하지 않습니다. 기존 서버의 보호된 정리 절차만 사용하며, 실제 파일 삭제 전 검토가 필요합니다.</p></div></div>
+      <div id="page-readiness" class="page hidden"><section class="section-head"><div><div class="overline">RELEASE CONTROLS</div><h2>프로덕션 출시 준비</h2><p>운영 서버의 실제 출시 승인 플래그입니다. 화면에서는 변경할 수 없습니다.</p></div><span class="priority-label">READ ONLY</span></section><div id="readinessList" class="ready-grid"></div><div class="note-box">Google Play에서 AAB를 업로드했다고 해서 서버의 공개 매칭이나 성인 인증이 자동으로 활성화되는 것은 아닙니다. 미준비 항목을 모두 검증한 뒤 별도 출시 승인이 필요합니다.</div></div>
+    </div>
+    <footer class="site-footer"><span>© 2026 DESIRE LAB · YAJANG ON</span><span>Admin Console v1.0 · Access controlled by Supabase</span></footer>
+  </main>
+</div>
+</body>
+</html>
