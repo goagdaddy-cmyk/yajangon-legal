@@ -27,7 +27,7 @@ window.YAJANGON_CONFIG = Object.freeze({
   const CFG = window.YAJANGON_CONFIG;
   const $ = id => document.getElementById(id);
   const fmt = n => Number(n || 0).toLocaleString('ko-KR');
-  const state = {client:null,overview:null,reports:[],deletions:[],page:'dashboard',busy:false};
+  const state = {client:null,overview:null,reports:[],independentNotices:[],deletions:[],page:'dashboard',busy:false};
   const nav = {dashboard:['운영 대시보드','서비스 전체 현황을 한눈에 확인하세요.'],members:['회원 현황','야장온 등록 회원의 가입 추이와 최근 프로필을 확인하세요.'],moderation:['신고 · 안전','접수된 신고를 확인하고 필요한 조치를 기록하세요.'],deletions:['계정 삭제 요청','요청된 계정 삭제 현황을 확인하세요.'],media:['미디어 안전 정리','삭제 대상 및 신고 증거의 보존 현황입니다.'],readiness:['출시 점검','프로덕션 승인 준비 상태를 확인하세요.']};
   const readyLabels = {
     operator_identity_confirmed:'운영자 소유권 확인',play_restrict_minors_confirmed:'Google Play 미성년자 접근 제한',
@@ -105,6 +105,53 @@ window.YAJANGON_CONFIG = Object.freeze({
       }card.append(actions);root.append(card);
     });
   }
+
+  function renderIndependentNotices(){
+    const root=$('safetyNoticeList'); root.replaceChildren();
+    const entries=Array.isArray(state.independentNotices)?state.independentNotices:[];
+    if(!entries.length) return empty(root,'독립 안전 제보가 없습니다. 상대 프로필 없이 접수 가능한 별도 신고 경로입니다.','✓');
+    for(const item of entries){
+      const card=node('article',{class:'report-card'});
+      const head=node('div',{class:'report-head'});
+      const meta=node('div',{class:'report-meta'});
+      meta.append(node('span',{class:'pill'+(item.category==='child_safety'?' orange':''),text:reasonKo(item.category)}));
+      meta.append(node('span',{class:'pill gray',text:item.is_qa_test?'QA TEST · 실제 신고 아님':'독립 안전 제보'}));
+      head.append(meta,node('span',{class:'report-id',text:dateFmt(item.created_at,true)}));
+      card.append(head,node('p',{text:item.details||''}));
+      card.append(node('div',{class:'report-id',text:'접수번호: '+String(item.id||'')+' · 상태: '+String(item.status||'')}));
+      const actions=node('div',{class:'report-actions'});
+      for(const [action,label] of [['reviewing','검토 시작'],['resolved','처리 완료'],['dismissed','기각']]){
+        const b=node('button',{class:'action-btn',type:'button',text:label});
+        b.addEventListener('click',()=>processSafetyNotice(item,action,label));actions.append(b);
+      }
+      card.append(actions);root.append(card);
+    }
+  }
+  async function createSafetyQaNotice(){
+    if(state.busy||!confirm('실제 회원이나 콘텐츠에 영향을 주지 않는 QA 전용 안전제보를 1건 등록할까요?\n테스트로 명확히 구분되며 자동으로 계정을 제재하지 않습니다.')) return;
+    setBusy(true);
+    let succeeded=false;
+    try{
+      const {data,error}=await state.client.rpc('yajangon_v102_submit_safety_notice',{
+        p_category:'other',p_details:'QA 테스트 전용: 발견 및 피드를 열지 않고 독립 안전 신고 접수·운영자 조회를 확인합니다. 실제 이용자 피해 신고가 아닙니다.',p_qa_test:true
+      });
+      if(error)throw error;if(!data?.ok)throw new Error('서버에서 접수를 확인하지 못했습니다.');
+      succeeded=true;
+    }catch(e){notice('QA 신고 생성 실패: '+String(e.message||e),true);}
+    finally{setBusy(false);}
+    if(succeeded){notice('QA 테스트 신고가 접수됐습니다. 실제 회원에게 불이익이 없습니다.');await loadData(true);}
+  }
+  async function processSafetyNotice(item,action,label){
+    if(state.busy||!confirm((item.is_qa_test?'QA 테스트':'실제')+' 안전제보를 '+label+'할까요? 처리 내용은 감사 기록에 남습니다.'))return;
+    const note=prompt('처리 사유(최대 500자)를 입력하세요.'); if(note===null)return;
+    setBusy(true);let succeeded=false;
+    try{
+      const {data,error}=await state.client.rpc('yajangon_v102_safety_admin',{p_action:action,p_notice_id:item.id,p_note:note.slice(0,500)});
+      if(error)throw error;if(!data?.ok)throw new Error('서버 처리 결과를 확인하지 못했습니다.');
+      succeeded=true;
+    }catch(e){notice('안전제보 처리 실패: '+String(e.message||e),true);}finally{setBusy(false);}
+    if(succeeded){notice(label+' 처리 기록이 저장됐습니다.');await loadData(true);}
+  }
   function reasonKo(r){return({harassment:'괴롭힘',spam:'스팸',fraud:'사기',sexual_content:'성적 콘텐츠',child_safety:'아동 안전',other:'기타'})[r]||r||'신고';}
   async function moderate(report,action,label){if(state.busy)return;
     const highRisk=['suspend','ban'].includes(action);if(!confirm(`${label} 조치를 실제 서버에 적용할까요?\n신고 대상: ${String(report.target_id||'').slice(0,10)}…\n모든 조치는 감사 기록에 남습니다.`))return;
@@ -127,15 +174,20 @@ window.YAJANGON_CONFIG = Object.freeze({
       const {data,error}=await state.client.rpc('yajangon_admin_overview_v1');
       if(error)throw error;
       state.overview=data||{};renderOverview();
-      const [mod,del]=await Promise.allSettled([
+      const [mod,del,ind]=await Promise.allSettled([
         state.client.rpc('yajangon_v101_moderation',{p_action:'list',p_report_source:null,p_report_id:null,p_note:null}),
-        state.client.rpc('yajangon_v045_admin_queue',{p_action:'list_deletion',p_user_id:null})
+        state.client.rpc('yajangon_v045_admin_queue',{p_action:'list_deletion',p_user_id:null}),
+        state.client.rpc('yajangon_v102_safety_admin',{p_action:'list',p_notice_id:null,p_note:null})
       ]);
       if(mod.status==='fulfilled'&&!mod.value.error)state.reports=mod.value.data?.reports||[];
       else {state.reports=[];notice('신고 목록 조회가 실패했습니다. 관리자 권한과 서버 API를 확인하세요.',true);}
       if(del.status==='fulfilled'&&!del.value.error)state.deletions=del.value.data?.requests||[];
       else {state.deletions=[];notice('삭제 요청 목록을 조회하지 못했습니다.',true);}
-      renderReports();renderDeletions();
+      if(ind.status==='fulfilled'&&!ind.value.error)state.independentNotices=ind.value.data?.notices||[];
+      else {state.independentNotices=[];notice('독립 안전 제보 목록을 불러오지 못했습니다.',true);}
+      renderReports();renderIndependentNotices();renderDeletions();
+      const trueNoticeCount=state.independentNotices.filter(x=>!x.is_qa_test).length;
+      set('navReportCount',fmt(Number(data.reports?.pending||0)+trueNoticeCount));
       set('lastUpdated',timeFmt(data.as_of||new Date().toISOString()));
       if(!silent)notice('운영 서버의 최신 데이터를 불러왔습니다.');
       return true;
@@ -155,10 +207,11 @@ window.YAJANGON_CONFIG = Object.freeze({
       try{const {error}=await state.client.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)throw error;$('password').value='';await authenticated();}
       catch(err){authError('로그인 실패: '+String(err.message||err));}finally{btn.disabled=false;}
     });
-    $('logout').addEventListener('click',async()=>{await state.client.auth.signOut();state.overview=null;state.reports=[];state.deletions=[];showLogin();authError('');});
+    $('logout').addEventListener('click',async()=>{await state.client.auth.signOut();state.overview=null;state.reports=[];state.independentNotices=[];state.deletions=[];showLogin();authError('');});
     $('refresh').addEventListener('click',()=>loadData());$('menuToggle').addEventListener('click',()=>$('sidebar').classList.toggle('open'));
     $('mainNav').addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)selectPage(b.dataset.page);});
     document.querySelectorAll('[data-jump]').forEach(e=>e.addEventListener('click',()=>selectPage(e.dataset.jump)));
+    $('createSafetyQaNotice').addEventListener('click',createSafetyQaNotice);
     $('memberSearch').addEventListener('input',renderMembers);$('memberSearchClear').addEventListener('click',()=>{$('memberSearch').value='';renderMembers();});
   }
   async function authenticated(){const {data:{session}}=await state.client.auth.getSession();if(!session){showLogin();return;}const ok=await loadData(true);if(ok){showApp();selectPage(state.page);}}
@@ -224,7 +277,7 @@ window.YAJANGON_CONFIG = Object.freeze({
         <div class="two-col activity-grid"><section class="panel"><div class="panel-top"><div><div class="overline">TRUST & SAFETY</div><h2>안전 관리 현황</h2></div><button class="link-action" data-jump="moderation">신고 관리 ↗</button></div><div class="activity-rows"><div><span>미처리 신고</span><b id="summaryPending">—</b></div><div><span>아동 안전 관련 신고</span><b id="summaryChild">—</b></div><div><span>계정 삭제 요청</span><b id="summaryDeletions">—</b></div><div><span>정리 대기 사진</span><b id="summaryMedia">—</b></div></div></section><section class="panel"><div class="panel-top"><div><div class="overline">MEMBER DIRECTORY</div><h2>최근 가입 회원</h2></div><button class="link-action" data-jump="members">전체 보기 ↗</button></div><div id="recentMembers" class="recent-list"></div></section></div>
       </div>
       <div id="page-members" class="page hidden"><section class="panel"><div class="panel-top flex-wrap"><div><div class="overline">REGISTRATION</div><h2>등록 회원 목록</h2></div><div class="search-wrap"><input id="memberSearch" type="search" placeholder="닉네임·ID 검색" aria-label="회원 검색"><button id="memberSearchClear" class="clear-search">×</button></div></div><div class="table-wrap"><table><thead><tr><th>회원</th><th>성별</th><th>나이</th><th>가입일 (KST)</th><th>계정 상태</th></tr></thead><tbody id="membersBody"></tbody></table></div><p class="panel-foot">최근 40명만 조회합니다. 계정 정지·차단은 신고 기록을 근거로 한 운영자 기능을 사용합니다.</p></section></div>
-      <div id="page-moderation" class="page hidden"><section class="section-head"><div><div class="overline">TRUST & SAFETY</div><h2>통합 신고 접수함</h2><p>채팅·사진·영상·피드 신고를 통합해 확인합니다. 아동 안전 신고가 우선 정렬됩니다.</p></div><span class="priority-label">CSAE PRIORITY</span></section><div id="reportList" class="report-list"></div><div class="note-box">제재 버튼을 선택하면 실제 운영 서버에 반영되고 감사 기록이 남습니다. 관리자 본인과 다른 운영자를 제재할 수 없도록 서버가 제한합니다.</div></div>
+      <div id="page-moderation" class="page hidden"><section class="section-head"><div><div class="overline">TRUST & SAFETY</div><h2>통합 신고 접수함</h2><p>채팅·사진·영상·피드 신고를 통합해 확인합니다. 아동 안전 신고가 우선 정렬됩니다.</p></div><span class="priority-label">CSAE PRIORITY</span></section><section class="panel" style="margin-bottom:18px"><div class="panel-top flex-wrap"><div><div class="overline">INDEPENDENT SAFETY</div><h2>독립 안전 제보 · QA</h2><p class="panel-foot">발견·피드·매칭을 열지 않고도 접수되는 안전 제보입니다. QA 신고는 실제 신고 건수와 분리하며 계정 제재를 수행하지 않습니다.</p></div><button type="button" class="action-btn" id="createSafetyQaNotice">QA 테스트 제보 생성</button></div><div id="safetyNoticeList" class="report-list"></div></section><div class="overline" style="margin-bottom:12px">CHAT · MEDIA · FEED</div><div id="reportList" class="report-list"></div><div class="note-box">제재 버튼을 선택하면 실제 운영 서버에 반영되고 감사 기록이 남습니다. 관리자 본인과 다른 운영자를 제재할 수 없도록 서버가 제한합니다.</div></div>
       <div id="page-deletions" class="page hidden"><section class="panel"><div class="panel-top"><div><div class="overline">PRIVACY REQUESTS</div><h2>계정 삭제 요청</h2></div><span class="period-chip">운영자 전용</span></div><div id="deletionList"></div><p class="panel-foot">현재 웹 버전은 조회 전용입니다. 개인정보·인증 계정의 영구 삭제는 별도 본인 확인과 보존 의무 검토 후 운영 절차로 진행합니다.</p></section></div>
       <div id="page-media" class="page hidden"><div class="metric-grid three"><div class="metric"><span>정리 대기 사진</span><strong id="mediaPending">—</strong><small>삭제가 완료되지 않은 항목</small></div><div class="metric"><span>신고 증거 사진</span><strong id="mediaEvidencePhoto">—</strong><small>증거 보존 대상</small></div><div class="metric"><span>신고 증거 미디어</span><strong id="mediaEvidenceOther">—</strong><small>영상·음성 등</small></div></div><div class="note-box"><b>안전 조치</b><p>신고 증거 보존과 회원 개인정보 보호가 충돌하지 않도록 자동·수동 삭제를 이 화면에서 실행하지 않습니다. 기존 서버의 보호된 정리 절차만 사용하며, 실제 파일 삭제 전 검토가 필요합니다.</p></div></div>
       <div id="page-readiness" class="page hidden"><section class="section-head"><div><div class="overline">RELEASE CONTROLS</div><h2>프로덕션 출시 준비</h2><p>운영 서버의 실제 출시 승인 플래그입니다. 화면에서는 변경할 수 없습니다.</p></div><span class="priority-label">READ ONLY</span></section><div id="readinessList" class="ready-grid"></div><div class="note-box">Google Play에서 AAB를 업로드했다고 해서 서버의 공개 매칭이나 성인 인증이 자동으로 활성화되는 것은 아닙니다. 미준비 항목을 모두 검증한 뒤 별도 출시 승인이 필요합니다.</div></div>
